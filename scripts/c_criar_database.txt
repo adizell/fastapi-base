@@ -1,0 +1,6 @@
+1. Crie o banco de dados no postgres
+psql -U postgres -c "CREATE DATABASE fastapi_base;"
+
+2. Rodar as migrações
+poetry run alembic revision --autogenerate -m "creating project"
+poetry run alembic upgrade head

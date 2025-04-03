@@ -3,8 +3,10 @@ Permission Model Module
 
 This module defines the Permission model for granular access control.
 """
-from sqlalchemy import Column, String
-from sqlalchemy.orm import relationship
+from typing import List, Optional
+
+from sqlalchemy import String
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
 
@@ -20,12 +22,12 @@ class Permission(Base):
         roles: Many-to-many relationship with roles
     """
 
-    name = Column(String(100), nullable=False)
-    code = Column(String(100), unique=True, index=True, nullable=False)
-    description = Column(String(255), nullable=True)
+    name: Mapped[str] = mapped_column(String(100), nullable=False)
+    code: Mapped[str] = mapped_column(String(100), unique=True, index=True, nullable=False)
+    description: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
 
     # Relationships
-    roles = relationship(
+    roles: Mapped[List["Role"]] = relationship(
         "Role",
         secondary="role_permission",
         back_populates="permissions",

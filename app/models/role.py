@@ -3,8 +3,10 @@ Role Model Module
 
 This module defines the Role model and related SQLAlchemy models.
 """
+from typing import List, Optional
+
 from sqlalchemy import Column, ForeignKey, String, Table
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
 
@@ -29,19 +31,19 @@ class Role(Base):
         users: Many-to-many relationship with users
     """
 
-    name = Column(String(100), nullable=False)
-    code = Column(String(50), unique=True, index=True, nullable=False)
-    description = Column(String(255), nullable=True)
+    name: Mapped[str] = mapped_column(String(100), nullable=False)
+    code: Mapped[str] = mapped_column(String(50), unique=True, index=True, nullable=False)
+    description: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
 
     # Relationships
-    permissions = relationship(
+    permissions: Mapped[List["Permission"]] = relationship(
         "Permission",
         secondary=role_permission,
         back_populates="roles",
         lazy="selectin",
     )
 
-    users = relationship(
+    users: Mapped[List["User"]] = relationship(
         "User",
         secondary="user_role",
         back_populates="roles",

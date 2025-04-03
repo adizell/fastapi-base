@@ -1,0 +1,31 @@
+1. Instalar todas as dependências do projeto:
+poetry install
+
+2. Instalar apenas dependências de produção (sem dependências de desenvolvimento):
+poetry install --no-dev
+
+3. Adicionar uma nova dependência:
+poetry add fastapi
+
+4. Adicionar uma dependência de desenvolvimento:
+poetry add pytest --dev
+
+5. Atualizar todas as dependências:
+poetry update
+
+6. Ativar o ambiente virtual:
+poetry shell
+
+7. Executar um comando dentro do ambiente virtual sem ativá-lo diretamente:
+poetry run python -m app.main
+ou
+uvicorn app.main:app
+
+8. Verificar as dependências instaladas:
+poetry show
+
+9. Verificar a configuração do Poetry:
+poetry config --list
+
+10. Exportar as dependências para requirements.txt (útil para ambientes que não usam Poetry):
+poetry export -f requirements.txt --output requirements.txt

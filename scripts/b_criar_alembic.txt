@@ -1,0 +1,2 @@
+1. Criar arquivos
+poetry run alembic init alembic

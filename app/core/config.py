@@ -93,25 +93,26 @@ class Settings(BaseSettings):
             password=values.get("POSTGRES_PASSWORD"),
             host=values.get("POSTGRES_SERVER"),
             port=int(values.get("POSTGRES_PORT", 5432)),
-            path=f"/{values.get('POSTGRES_DB') or ''}",
+            path=values.get("POSTGRES_DB"),
+            # path=f"{values.get('POSTGRES_DB') or ''}",
         )
 
-    @field_validator("CORS_ORIGINS", mode="before")
-    def assemble_cors_origins(cls, v: Union[str, List[str]]) -> Union[List[str], str]:
-        """
-        Parse CORS_ORIGINS from string to list if needed.
-
-        Args:
-            v: CORS origins as string or list
-
-        Returns:
-            List of CORS origins
-        """
-        if isinstance(v, str) and not v.startswith("["):
-            return [i.strip() for i in v.split(",")]
-        elif isinstance(v, (list, str)):
-            return v
-        raise ValueError(v)
+    # @field_validator("CORS_ORIGINS", mode="before")
+    # def assemble_cors_origins(cls, v: Union[str, List[str]]) -> Union[List[str], str]:
+    #     """
+    #     Parse CORS_ORIGINS from string to list if needed.
+    #
+    #     Args:
+    #         v: CORS origins as string or list
+    #
+    #     Returns:
+    #         List of CORS origins
+    #     """
+    #     if isinstance(v, str) and not v.startswith("["):
+    #         return [i.strip() for i in v.split(",")]
+    #     elif isinstance(v, (list, str)):
+    #         return v
+    #     raise ValueError(v)
 
 
 # Create settings instance
