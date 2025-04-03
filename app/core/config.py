@@ -34,7 +34,8 @@ class Settings(BaseSettings):
     POSTGRES_PASSWORD: str = "postgres"
     POSTGRES_DB: str = "app"
     POSTGRES_PORT: str = "5432"
-    SQLALCHEMY_DATABASE_URI: Optional[PostgresDsn] = None
+    # SQLALCHEMY_DATABASE_URI: Optional[PostgresDsn] = None
+    SQLALCHEMY_DATABASE_URI: Optional[str] = None
 
     # Security settings
     SECRET_KEY: str
@@ -87,32 +88,32 @@ class Settings(BaseSettings):
             return v
 
         values = info.data
-        return PostgresDsn.build(
-            scheme="postgresql+asyncpg",
-            username=values.get("POSTGRES_USER"),
-            password=values.get("POSTGRES_PASSWORD"),
-            host=values.get("POSTGRES_SERVER"),
-            port=int(values.get("POSTGRES_PORT", 5432)),
-            path=values.get("POSTGRES_DB"),
-            # path=f"{values.get('POSTGRES_DB') or ''}",
-        )
 
-    # @field_validator("CORS_ORIGINS", mode="before")
-    # def assemble_cors_origins(cls, v: Union[str, List[str]]) -> Union[List[str], str]:
-    #     """
-    #     Parse CORS_ORIGINS from string to list if needed.
-    #
-    #     Args:
-    #         v: CORS origins as string or list
-    #
-    #     Returns:
-    #         List of CORS origins
-    #     """
-    #     if isinstance(v, str) and not v.startswith("["):
-    #         return [i.strip() for i in v.split(",")]
-    #     elif isinstance(v, (list, str)):
-    #         return v
-    #     raise ValueError(v)
+        # Manualmente construir a string de conexão para evitar problemas com barras
+        db_user = values.get("POSTGRES_USER")
+        db_password = values.get("POSTGRES_PASSWORD")
+        db_host = values.get("POSTGRES_SERVER")
+        db_port = values.get("POSTGRES_PORT", 5432)
+        db_name = values.get("POSTGRES_DB")
+
+        return f"postgresql+asyncpg://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
+
+    @field_validator("CORS_ORIGINS", mode="before")
+    def assemble_cors_origins(cls, v: Union[str, List[str]]) -> Union[List[str], str]:
+        """
+        Parse CORS_ORIGINS from string to list if needed.
+
+        Args:
+            v: CORS origins as string or list
+
+        Returns:
+            List of CORS origins
+        """
+        if isinstance(v, str) and not v.startswith("["):
+            return [i.strip() for i in v.split(",")]
+        elif isinstance(v, (list, str)):
+            return v
+        raise ValueError(v)
 
 
 # Create settings instance

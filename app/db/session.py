@@ -3,8 +3,8 @@ Database Session Module
 
 This module sets up SQLAlchemy async engine and session factory.
 """
-from typing import AsyncGenerator
 
+from typing import AsyncGenerator
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 
@@ -20,7 +20,7 @@ engine = create_async_engine(
 
 # Create async session factory
 AsyncSessionLocal = sessionmaker(
-    engine,
+    bind=engine,
     class_=AsyncSession,
     expire_on_commit=False,
     autoflush=False,
@@ -29,20 +29,19 @@ AsyncSessionLocal = sessionmaker(
 
 async def get_db() -> AsyncGenerator[AsyncSession, None]:
     """
-    Dependency function to get a database session.
-
-    Yields:
-        AsyncSession: Database session
+    Dependency function to provide a database session.
 
     Usage:
-        @app.get("/items/")
+        @router.get("/items/")
         async def read_items(db: AsyncSession = Depends(get_db)):
             ...
     """
     async with AsyncSessionLocal() as session:
         try:
             yield session
-            await session.commit()
-        except Exception:
+        except Exception as e:
             await session.rollback()
+            # Optional: log the error if you have a logger
             raise
+        finally:
+            await session.close()

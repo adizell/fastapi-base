@@ -1,0 +1,11 @@
+# Inicia o servidor FastAPI em modo normal (produção)
+poetry run uvicorn app.main:app
+
+# Inicia o servidor FastAPI em modo de desenvolvimento com recarregamento automático (hot-reload)
+poetry run uvicorn app.main:app --reload
+
+# Acessa a documentação interativa da API (Swagger UI)
+http://127.0.0.1:8000/api/docs
+
+# Acessa a documentação alternativa da API (ReDoc)
+http://127.0.0.1:8000/api/redoc
