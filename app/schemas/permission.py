@@ -27,7 +27,6 @@ class PermissionBase(BaseSchema):
 
 class PermissionCreate(PermissionBase):
     """Schema for permission creation."""
-    pass
 
 
 class PermissionUpdate(BaseSchema):
@@ -51,4 +50,3 @@ class PermissionResponse(PermissionBase, BaseProperties):
 
     Inherits from PermissionBase and BaseProperties.
     """
-    pass

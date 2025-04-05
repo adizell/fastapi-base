@@ -33,6 +33,7 @@ mypy = "^1.5.1"
 flake8 = "^6.1.0"
 pytest-cov = "^4.1.0"
 bcrypt = "^3.2.2"
+pylint = "^3.3.6"
 
 [tool.poetry.extras]
 worker = ["celery", "redis"]

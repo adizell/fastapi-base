@@ -77,8 +77,6 @@ class UserResponse(UserBase, BaseProperties):
     Inherits from UserBase and BaseProperties.
     """
 
-    pass
-
 
 class UserDetailResponse(UserResponse):
     """

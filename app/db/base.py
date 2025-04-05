@@ -1,3 +1,4 @@
+# app/db/base.py
 """
 SQLAlchemy Base Model Module
 
@@ -5,11 +6,12 @@ This module defines the base model for all SQLAlchemy models in the application.
 """
 import uuid
 from datetime import datetime
-from typing import Any, ClassVar, Optional
+from typing import ClassVar
 
-from sqlalchemy import Column, DateTime, String, func
+from sqlalchemy import DateTime, String
 from sqlalchemy.ext.declarative import as_declarative, declared_attr
 from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.sql.functions import now
 
 
 @as_declarative()
@@ -26,12 +28,17 @@ class Base:
     __name__: ClassVar[str]
 
     # Primary key as UUID
-    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    id: Mapped[str] = mapped_column(
+        String(36), primary_key=True, default=lambda: str(uuid.uuid4())
+    )
 
     # Timestamps
-    created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now(), nullable=False)
-    updated_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now(), onupdate=func.now(),
-                                                 nullable=False)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime, server_default=now(), nullable=False
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime, server_default=now(), onupdate=now(), nullable=False
+    )
 
     @declared_attr.directive
     def __tablename__(cls) -> str:
@@ -43,7 +50,9 @@ class Base:
         """
         # Convert CamelCase to snake_case
         name = cls.__name__
-        return ''.join(['_' + c.lower() if c.isupper() else c for c in name]).lstrip('_')
+        return "".join(["_" + c.lower() if c.isupper() else c for c in name]).lstrip(
+            "_"
+        )
 
     def dict(self) -> dict:
         """

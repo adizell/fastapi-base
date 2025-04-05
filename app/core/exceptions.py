@@ -21,11 +21,11 @@ class AppException(Exception):
     """
 
     def __init__(
-            self,
-            status_code: int,
-            detail: str,
-            error_code: Optional[str] = None,
-            headers: Optional[Dict[str, Any]] = None
+        self,
+        status_code: int,
+        detail: str,
+        error_code: Optional[str] = None,
+        headers: Optional[Dict[str, Any]] = None,
     ):
         """
         Initialize exception with status code, detail message, and optional extras.
@@ -87,7 +87,9 @@ class UnauthorizedError(AppException):
         error_code: Application-specific error code
     """
 
-    def __init__(self, detail: str = "Not authenticated", error_code: Optional[str] = None):
+    def __init__(
+        self, detail: str = "Not authenticated", error_code: Optional[str] = None
+    ):
         """Initialize as 401 Unauthorized with detail message."""
         super().__init__(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -106,7 +108,9 @@ class ForbiddenError(AppException):
         error_code: Application-specific error code
     """
 
-    def __init__(self, detail: str = "Insufficient permissions", error_code: Optional[str] = None):
+    def __init__(
+        self, detail: str = "Insufficient permissions", error_code: Optional[str] = None
+    ):
         """Initialize as 403 Forbidden with detail message."""
         super().__init__(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -144,10 +148,10 @@ class RateLimitError(AppException):
     """
 
     def __init__(
-            self,
-            detail: str = "Rate limit exceeded",
-            retry_after: int = 60,
-            error_code: Optional[str] = None
+        self,
+        detail: str = "Rate limit exceeded",
+        retry_after: int = 60,
+        error_code: Optional[str] = None,
     ):
         """Initialize as 429 Too Many Requests with detail message and Retry-After header."""
         super().__init__(
@@ -167,7 +171,9 @@ class ServerError(AppException):
         error_code: Application-specific error code
     """
 
-    def __init__(self, detail: str = "Internal server error", error_code: Optional[str] = None):
+    def __init__(
+        self, detail: str = "Internal server error", error_code: Optional[str] = None
+    ):
         """Initialize as 500 Internal Server Error with detail message."""
         super().__init__(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,

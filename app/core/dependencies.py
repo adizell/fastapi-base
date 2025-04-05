@@ -4,11 +4,11 @@ Dependency Injection Module
 This module defines FastAPI dependencies for authentication, authorization,
 and other common requirements across the application.
 """
-from typing import Any, List, Optional, Set, Union
+from typing import List, Optional, Set
 
-from fastapi import Depends, Header, Query, Request
+from fastapi import Depends, Query, Request
 from fastapi.security import OAuth2PasswordBearer
-from jose import JWTError, jwt
+from jose import JWTError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
@@ -20,9 +20,7 @@ from app.models.user import User
 from app.schemas.token import TokenData
 
 # OAuth2 scheme for token handling
-oauth2_scheme = OAuth2PasswordBearer(
-    tokenUrl=f"{settings.API_PREFIX}/v1/auth/login"
-)
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{settings.API_PREFIX}/v1/auth/login")
 
 
 async def get_token_data(token: str = Depends(oauth2_scheme)) -> TokenData:
@@ -52,8 +50,8 @@ async def get_token_data(token: str = Depends(oauth2_scheme)) -> TokenData:
 
 
 async def get_current_user(
-        db: AsyncSession = Depends(get_db),
-        token_data: TokenData = Depends(get_token_data),
+    db: AsyncSession = Depends(get_db),
+    token_data: TokenData = Depends(get_token_data),
 ) -> User:
     """
     Get the current authenticated user.
@@ -79,7 +77,7 @@ async def get_current_user(
 
 
 async def get_current_active_user(
-        current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
 ) -> User:
     """
     Ensure the current user is active.
@@ -100,7 +98,7 @@ async def get_current_active_user(
 
 
 async def get_current_superuser(
-        current_user: User = Depends(get_current_active_user),
+    current_user: User = Depends(get_current_active_user),
 ) -> User:
     """
     Ensure the current user is a superuser.
@@ -132,7 +130,7 @@ def require_permissions(required_permissions: List[str]):
     """
 
     async def _check_permissions(
-            current_user: User = Depends(get_current_active_user),
+        current_user: User = Depends(get_current_active_user),
     ) -> User:
         """
         Check if the current user has all required permissions.
@@ -161,7 +159,9 @@ def require_permissions(required_permissions: List[str]):
         ]
 
         if missing_permissions:
-            raise ForbiddenError(f"Missing required permissions: {', '.join(missing_permissions)}")
+            raise ForbiddenError(
+                f"Missing required permissions: {', '.join(missing_permissions)}"
+            )
 
         return current_user
 
@@ -180,7 +180,7 @@ def require_any_permission(required_permissions: List[str]):
     """
 
     async def _check_any_permission(
-            current_user: User = Depends(get_current_active_user),
+        current_user: User = Depends(get_current_active_user),
     ) -> User:
         """
         Check if the current user has any of the required permissions.
@@ -207,7 +207,9 @@ def require_any_permission(required_permissions: List[str]):
         has_any = any(p in user_permissions for p in required_permissions)
 
         if not has_any:
-            raise ForbiddenError(f"Required at least one of these permissions: {', '.join(required_permissions)}")
+            raise ForbiddenError(
+                f"Required at least one of these permissions: {', '.join(required_permissions)}"
+            )
 
         return current_user
 
@@ -226,7 +228,7 @@ def require_role(role_code: str):
     """
 
     async def _check_role(
-            current_user: User = Depends(get_current_active_user),
+        current_user: User = Depends(get_current_active_user),
     ) -> User:
         """
         Check if the current user has the specified role.
@@ -255,8 +257,8 @@ def require_role(role_code: str):
 
 
 async def parse_pagination_params(
-        page: int = Query(1, ge=1, description="Page number"),
-        page_size: int = Query(20, ge=1, le=100, description="Items per page"),
+    page: int = Query(1, ge=1, description="Page number"),
+    page_size: int = Query(20, ge=1, le=100, description="Items per page"),
 ) -> dict:
     """
     Parse and validate pagination parameters.
@@ -277,9 +279,9 @@ async def parse_pagination_params(
 
 
 async def check_rate_limit(
-        request: Request,
-        user: Optional[User] = None,
-        limit: Optional[int] = None,
+    request: Request,
+    user: Optional[User] = None,
+    limit: Optional[int] = None,
 ) -> None:
     """
     Check if request rate limit is exceeded.
@@ -297,4 +299,3 @@ async def check_rate_limit(
     """
     # Implement rate limiting logic here
     # Example with Redis would track requests per minute by IP or user ID
-    pass

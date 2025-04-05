@@ -8,19 +8,19 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.exceptions import UnauthorizedError
+from app.crud.user import user_crud
 from app.db.session import get_db
 from app.schemas.token import RefreshToken, Token
 from app.schemas.user import UserCreate, UserResponse
 from app.services.auth import auth_service
-from app.crud.user import user_crud
 
 router = APIRouter()
 
 
 @router.post("/login", response_model=Token)
 async def login(
-        form_data: OAuth2PasswordRequestForm = Depends(),
-        db: AsyncSession = Depends(get_db),
+    form_data: OAuth2PasswordRequestForm = Depends(),
+    db: AsyncSession = Depends(get_db),
 ) -> Token:
     """
     OAuth2 compatible token login, get an access token for future requests.
@@ -56,21 +56,11 @@ async def login(
 
 @router.post("/refresh", response_model=Token)
 async def refresh_token(
-        token_data: RefreshToken,
-        db: AsyncSession = Depends(get_db),
+    token_data: RefreshToken,
+    db: AsyncSession = Depends(get_db),
 ) -> Token:
     """
     Refresh access token using a valid refresh token.
-
-    Args:
-        token_data: Refresh token data
-        db: Database session
-
-    Returns:
-        Token: New access and refresh tokens
-
-    Raises:
-        UnauthorizedError: If refresh token is invalid
     """
     try:
         return await auth_service.refresh_token(db, token_data.refresh_token)
@@ -82,24 +72,13 @@ async def refresh_token(
         )
 
 
-@router.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED
+)
 async def register(
-        user_in: UserCreate,
-        db: AsyncSession = Depends(get_db),
+    user_in: UserCreate,
+    db: AsyncSession = Depends(get_db),
 ) -> UserResponse:
-    """
-    Register a new user.
-
-    Args:
-        user_in: User creation data
-        db: Database session
-
-    Returns:
-        UserResponse: Created user
-
-    Raises:
-        HTTPException: If email already exists
-    """
     # Check if user with this email already exists
     user = await user_crud.get_by_email(db, email=user_in.email)
     if user:
@@ -114,7 +93,7 @@ async def register(
     # Create new user
     user = await user_crud.create(db, obj_in=user_in)
 
-    # Assign default roles if needed
-    # This could be extended to automatically assign a default role
+    # Commit the transaction (adicionamos esta linha)
+    await db.commit()
 
     return user

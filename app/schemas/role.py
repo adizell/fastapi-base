@@ -4,6 +4,7 @@ Role Schema Module
 This module defines Pydantic schemas for role data validation and serialization.
 """
 from typing import List, Optional
+
 from pydantic import Field
 
 from app.schemas.base import BaseProperties, BaseSchema

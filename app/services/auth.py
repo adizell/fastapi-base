@@ -3,12 +3,11 @@ Authentication Service Module
 
 This module handles authentication and token management services.
 """
-from typing import Dict, List, Optional, Tuple
+from typing import List, Optional
 
-from jose import JWTError, jwt
+from jose import JWTError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.config import settings
 from app.core.exceptions import ForbiddenError, UnauthorizedError
 from app.core.security import (
     create_access_token,
@@ -28,9 +27,7 @@ class AuthService:
 
     @staticmethod
     async def authenticate(
-            db: AsyncSession,
-            email: str,
-            password: str
+        db: AsyncSession, email: str, password: str
     ) -> Optional[User]:
         """
         Authenticate a user by email and password.
@@ -74,13 +71,8 @@ class AuthService:
                 unique_scopes.append(scope)
 
         # Create tokens
-        access_token = create_access_token(
-            subject=user.id,
-            scopes=unique_scopes
-        )
-        refresh_token = create_refresh_token(
-            subject=user.id
-        )
+        access_token = create_access_token(subject=user.id, scopes=unique_scopes)
+        refresh_token = create_refresh_token(subject=user.id)
 
         return Token(
             access_token=access_token,

@@ -1,3 +1,4 @@
+# app/models/role.py
 """
 Role Model Module
 
@@ -14,8 +15,18 @@ from app.db.base import Base
 role_permission = Table(
     "role_permission",
     Base.metadata,
-    Column("role_id", String(36), ForeignKey("role.id", ondelete="CASCADE"), primary_key=True),
-    Column("permission_id", String(36), ForeignKey("permission.id", ondelete="CASCADE"), primary_key=True),
+    Column(
+        "role_id",
+        String(36),
+        ForeignKey("role.id", ondelete="CASCADE"),
+        primary_key=True,
+    ),
+    Column(
+        "permission_id",
+        String(36),
+        ForeignKey("permission.id", ondelete="CASCADE"),
+        primary_key=True,
+    ),
 )
 
 
@@ -32,7 +43,9 @@ class Role(Base):
     """
 
     name: Mapped[str] = mapped_column(String(100), nullable=False)
-    code: Mapped[str] = mapped_column(String(50), unique=True, index=True, nullable=False)
+    code: Mapped[str] = mapped_column(
+        String(50), unique=True, index=True, nullable=False
+    )
     description: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
 
     # Relationships

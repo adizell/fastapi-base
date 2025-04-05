@@ -36,7 +36,9 @@ class CRUDPermission(CRUDBase[Permission, PermissionCreate, PermissionUpdate]):
         result = await db.execute(query)
         return result.scalars().first()
 
-    async def get_with_roles(self, db: AsyncSession, *, permission_id: str) -> Optional[Permission]:
+    async def get_with_roles(
+        self, db: AsyncSession, *, permission_id: str
+    ) -> Optional[Permission]:
         """
         Get permission with eagerly loaded roles.
 

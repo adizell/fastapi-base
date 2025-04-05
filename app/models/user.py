@@ -1,3 +1,4 @@
+# app/models/user.py
 """
 User Model Module
 
@@ -14,8 +15,18 @@ from app.db.base import Base
 user_role = Table(
     "user_role",
     Base.metadata,
-    Column("user_id", String(36), ForeignKey("user.id", ondelete="CASCADE"), primary_key=True),
-    Column("role_id", String(36), ForeignKey("role.id", ondelete="CASCADE"), primary_key=True),
+    Column(
+        "user_id",
+        String(36),
+        ForeignKey("user.id", ondelete="CASCADE"),
+        primary_key=True,
+    ),
+    Column(
+        "role_id",
+        String(36),
+        ForeignKey("role.id", ondelete="CASCADE"),
+        primary_key=True,
+    ),
 )
 
 
@@ -32,7 +43,9 @@ class User(Base):
         roles: Many-to-many relationship with roles
     """
 
-    email: Mapped[str] = mapped_column(String(255), unique=True, index=True, nullable=False)
+    email: Mapped[str] = mapped_column(
+        String(255), unique=True, index=True, nullable=False
+    )
     hashed_password: Mapped[str] = mapped_column(String(255), nullable=False)
     full_name: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)

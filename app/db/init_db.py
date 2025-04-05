@@ -36,13 +36,37 @@ async def init_permissions(db: AsyncSession) -> List[Permission]:
     # Define default permissions
     default_permissions = [
         {"name": "User Read", "code": "user:read", "description": "Can view users"},
-        {"name": "User Create", "code": "user:create", "description": "Can create users"},
-        {"name": "User Update", "code": "user:update", "description": "Can update users"},
-        {"name": "User Delete", "code": "user:delete", "description": "Can delete users"},
+        {
+            "name": "User Create",
+            "code": "user:create",
+            "description": "Can create users",
+        },
+        {
+            "name": "User Update",
+            "code": "user:update",
+            "description": "Can update users",
+        },
+        {
+            "name": "User Delete",
+            "code": "user:delete",
+            "description": "Can delete users",
+        },
         {"name": "Role Read", "code": "role:read", "description": "Can view roles"},
-        {"name": "Role Create", "code": "role:create", "description": "Can create roles"},
-        {"name": "Role Update", "code": "role:update", "description": "Can update roles"},
-        {"name": "Role Delete", "code": "role:delete", "description": "Can delete roles"},
+        {
+            "name": "Role Create",
+            "code": "role:create",
+            "description": "Can create roles",
+        },
+        {
+            "name": "Role Update",
+            "code": "role:update",
+            "description": "Can update roles",
+        },
+        {
+            "name": "Role Delete",
+            "code": "role:delete",
+            "description": "Can delete roles",
+        },
         # Add more permissions as needed
     ]
 
@@ -81,13 +105,13 @@ async def init_roles(db: AsyncSession, permissions: List[Permission]) -> List[Ro
             "name": "Admin",
             "code": "admin",
             "description": "Administrator role with all permissions",
-            "permission_ids": all_perm_ids
+            "permission_ids": all_perm_ids,
         },
         {
             "name": "User",
             "code": "user",
             "description": "Regular user with limited permissions",
-            "permission_ids": user_perm_ids
+            "permission_ids": user_perm_ids,
         },
         # Add more roles as needed
     ]
@@ -101,12 +125,10 @@ async def init_roles(db: AsyncSession, permissions: List[Permission]) -> List[Ro
             role_in = RoleCreate(
                 name=role_data["name"],
                 code=role_data["code"],
-                description=role_data["description"]
+                description=role_data["description"],
             )
             role = await role_crud.create_with_permissions(
-                db,
-                obj_in=role_in,
-                permission_ids=role_data["permission_ids"]
+                db, obj_in=role_in, permission_ids=role_data["permission_ids"]
             )
             logger.info(f"Created role: {role.code}")
         roles.append(role)
@@ -142,7 +164,9 @@ async def init_superuser(db: AsyncSession, roles: List[Role]) -> None:
                 is_active=True,
                 full_name="System Administrator",
             )
-            user = await user_crud.create_with_roles(db, obj_in=user_in, role_ids=role_ids)
+            user = await user_crud.create_with_roles(
+                db, obj_in=user_in, role_ids=role_ids
+            )
             logger.info(f"Created superuser: {user.email}")
 
 

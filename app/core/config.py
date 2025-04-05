@@ -6,7 +6,7 @@ It uses Pydantic's Settings class to validate configuration values.
 """
 from typing import Any, Dict, List, Optional, Union
 
-from pydantic import AnyHttpUrl, Field, PostgresDsn, field_validator
+from pydantic import AnyHttpUrl, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -16,13 +16,16 @@ class Settings(BaseSettings):
 
     Inherits from Pydantic's BaseSettings to automatically parse environment variables.
     """
+
     # API configuration
     API_PREFIX: str = "/api"
     VERSION: str = "1.0.0"
 
     # Project metadata
     PROJECT_NAME: str = "FastAPI Project"
-    PROJECT_DESCRIPTION: str = "Modern FastAPI project template with authentication and authorization"
+    PROJECT_DESCRIPTION: str = (
+        "Modern FastAPI project template with authentication and authorization"
+    )
 
     # Environment and debug settings
     DEBUG: bool = False

@@ -23,7 +23,9 @@ class Permission(Base):
     """
 
     name: Mapped[str] = mapped_column(String(100), nullable=False)
-    code: Mapped[str] = mapped_column(String(100), unique=True, index=True, nullable=False)
+    code: Mapped[str] = mapped_column(
+        String(100), unique=True, index=True, nullable=False
+    )
     description: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
 
     # Relationships

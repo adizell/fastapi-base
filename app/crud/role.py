@@ -37,7 +37,9 @@ class CRUDRole(CRUDBase[Role, RoleCreate, RoleUpdate]):
         result = await db.execute(query)
         return result.scalars().first()
 
-    async def get_with_permissions(self, db: AsyncSession, *, role_id: str) -> Optional[Role]:
+    async def get_with_permissions(
+        self, db: AsyncSession, *, role_id: str
+    ) -> Optional[Role]:
         """
         Get role with eagerly loaded permissions.
 
@@ -57,11 +59,7 @@ class CRUDRole(CRUDBase[Role, RoleCreate, RoleUpdate]):
         return result.scalars().first()
 
     async def create_with_permissions(
-            self,
-            db: AsyncSession,
-            *,
-            obj_in: RoleCreate,
-            permission_ids: List[str]
+        self, db: AsyncSession, *, obj_in: RoleCreate, permission_ids: List[str]
     ) -> Role:
         """
         Create a new role with assigned permissions.
@@ -90,11 +88,7 @@ class CRUDRole(CRUDBase[Role, RoleCreate, RoleUpdate]):
         return role
 
     async def update_role_permissions(
-            self,
-            db: AsyncSession,
-            *,
-            role_id: str,
-            permission_ids: List[str]
+        self, db: AsyncSession, *, role_id: str, permission_ids: List[str]
     ) -> Optional[Role]:
         """
         Update role's permissions.
@@ -124,7 +118,9 @@ class CRUDRole(CRUDBase[Role, RoleCreate, RoleUpdate]):
 
         return role
 
-    async def get_role_with_users(self, db: AsyncSession, *, role_id: str) -> Optional[Role]:
+    async def get_role_with_users(
+        self, db: AsyncSession, *, role_id: str
+    ) -> Optional[Role]:
         """
         Get role with eagerly loaded users.
 
@@ -135,11 +131,7 @@ class CRUDRole(CRUDBase[Role, RoleCreate, RoleUpdate]):
         Returns:
             Optional[Role]: Role with users or None
         """
-        query = (
-            select(Role)
-            .options(selectinload(Role.users))
-            .where(Role.id == role_id)
-        )
+        query = select(Role).options(selectinload(Role.users)).where(Role.id == role_id)
         result = await db.execute(query)
         return result.scalars().first()
 

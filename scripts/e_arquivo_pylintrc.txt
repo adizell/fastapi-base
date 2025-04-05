@@ -1,0 +1,9 @@
+# Execute o script abaixo
+poetry run pylint app/
+
+
+
+# Importações não usadas (W0611 / W0613)
+# Você pode limpar os imports e argumentos de funções que não estão sendo usados.
+# Use ferramentas automáticas como:
+poetry run autoflake --in-place --remove-unused-variables --remove-all-unused-imports -r app/

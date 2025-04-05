@@ -5,8 +5,6 @@ This module defines Pydantic schemas for token validation and serialization.
 """
 from typing import List, Optional
 
-from pydantic import BaseModel
-
 from app.schemas.base import BaseSchema
 
 

@@ -5,6 +5,7 @@ This module sets up SQLAlchemy async engine and session factory.
 """
 
 from typing import AsyncGenerator
+
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 
@@ -30,11 +31,6 @@ AsyncSessionLocal = sessionmaker(
 async def get_db() -> AsyncGenerator[AsyncSession, None]:
     """
     Dependency function to provide a database session.
-
-    Usage:
-        @router.get("/items/")
-        async def read_items(db: AsyncSession = Depends(get_db)):
-            ...
     """
     async with AsyncSessionLocal() as session:
         try:

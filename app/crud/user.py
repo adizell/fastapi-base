@@ -62,11 +62,7 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
         return db_obj
 
     async def create_with_roles(
-            self,
-            db: AsyncSession,
-            *,
-            obj_in: UserCreate,
-            role_ids: List[str]
+        self, db: AsyncSession, *, obj_in: UserCreate, role_ids: List[str]
     ) -> User:
         """
         Create a new user with assigned roles.
@@ -95,11 +91,11 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
         return user
 
     async def update(
-            self,
-            db: AsyncSession,
-            *,
-            db_obj: User,
-            obj_in: Union[UserUpdate, Dict[str, Any]]
+        self,
+        db: AsyncSession,
+        *,
+        db_obj: User,
+        obj_in: Union[UserUpdate, Dict[str, Any]],
     ) -> User:
         """
         Update a user, handling password hashing if needed.
@@ -126,7 +122,7 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
         return await super().update(db, db_obj=db_obj, obj_in=update_data)
 
     async def authenticate(
-            self, db: AsyncSession, *, email: str, password: str
+        self, db: AsyncSession, *, email: str, password: str
     ) -> Optional[User]:
         """
         Authenticate a user by email and password.
@@ -170,7 +166,9 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
         """
         return user.is_superuser
 
-    async def get_user_with_roles(self, db: AsyncSession, *, user_id: str) -> Optional[User]:
+    async def get_user_with_roles(
+        self, db: AsyncSession, *, user_id: str
+    ) -> Optional[User]:
         """
         Get user with eagerly loaded roles.
 
@@ -181,20 +179,12 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
         Returns:
             Optional[User]: User with roles or None
         """
-        query = (
-            select(User)
-            .options(selectinload(User.roles))
-            .where(User.id == user_id)
-        )
+        query = select(User).options(selectinload(User.roles)).where(User.id == user_id)
         result = await db.execute(query)
         return result.scalars().first()
 
     async def update_user_roles(
-            self,
-            db: AsyncSession,
-            *,
-            user_id: str,
-            role_ids: List[str]
+        self, db: AsyncSession, *, user_id: str, role_ids: List[str]
     ) -> Optional[User]:
         """
         Update user's roles.

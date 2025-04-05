@@ -7,7 +7,7 @@ from typing import Any, Dict, Generic, List, Optional, Type, TypeVar, Union
 
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
-from sqlalchemy import select, func, and_, or_
+from sqlalchemy import and_, func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql.expression import Select
 
@@ -52,12 +52,12 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         return result.scalars().first()
 
     async def get_multi(
-            self,
-            db: AsyncSession,
-            *,
-            skip: int = 0,
-            limit: int = 100,
-            filters: Optional[List[Any]] = None,
+        self,
+        db: AsyncSession,
+        *,
+        skip: int = 0,
+        limit: int = 100,
+        filters: Optional[List[Any]] = None,
     ) -> List[ModelType]:
         """
         Get multiple records with pagination and optional filters.
@@ -82,9 +82,9 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         return result.scalars().all()
 
     async def get_count(
-            self,
-            db: AsyncSession,
-            filters: Optional[List[Any]] = None,
+        self,
+        db: AsyncSession,
+        filters: Optional[List[Any]] = None,
     ) -> int:
         """
         Get count of records with optional filters.
@@ -123,11 +123,11 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         return db_obj
 
     async def update(
-            self,
-            db: AsyncSession,
-            *,
-            db_obj: ModelType,
-            obj_in: Union[UpdateSchemaType, Dict[str, Any]]
+        self,
+        db: AsyncSession,
+        *,
+        db_obj: ModelType,
+        obj_in: Union[UpdateSchemaType, Dict[str, Any]],
     ) -> ModelType:
         """
         Update a record.
@@ -174,10 +174,10 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         return obj
 
     def get_search_query(
-            self,
-            query: Select,
-            search_term: Optional[str],
-            search_fields: List[Any],
+        self,
+        query: Select,
+        search_term: Optional[str],
+        search_fields: List[Any],
     ) -> Select:
         """
         Add search conditions to query.

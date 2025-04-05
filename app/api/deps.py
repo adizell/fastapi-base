@@ -5,12 +5,12 @@ This module defines common FastAPI dependencies for API endpoints.
 """
 from typing import Dict, Optional
 
-from fastapi import Depends, Query
+from fastapi import Query
 
 
 async def parse_pagination_params(
-        page: int = Query(1, ge=1, description="Page number"),
-        page_size: int = Query(20, ge=1, le=100, description="Items per page"),
+    page: int = Query(1, ge=1, description="Page number"),
+    page_size: int = Query(20, ge=1, le=100, description="Items per page"),
 ) -> Dict[str, int]:
     """
     Parse and validate pagination parameters.
@@ -31,8 +31,8 @@ async def parse_pagination_params(
 
 
 async def parse_filtering_params(
-        sort_by: Optional[str] = Query(None, description="Field to sort by"),
-        sort_desc: bool = Query(False, description="Sort in descending order"),
+    sort_by: Optional[str] = Query(None, description="Field to sort by"),
+    sort_desc: bool = Query(False, description="Sort in descending order"),
 ) -> Dict[str, any]:
     """
     Parse and validate filtering parameters.

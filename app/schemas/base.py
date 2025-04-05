@@ -69,11 +69,11 @@ class PaginatedResponse(BaseSchema, Generic[ModelType]):
 
     @classmethod
     def create(
-            cls,
-            items: list[Any],
-            total: int,
-            page: int,
-            page_size: int,
+        cls,
+        items: list[Any],
+        total: int,
+        page: int,
+        page_size: int,
     ) -> "PaginatedResponse":
         """
         Create a paginated response.

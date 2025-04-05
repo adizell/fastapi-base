@@ -1,0 +1,16 @@
+#!/bin/bash
+echo "🧹 Rodando autoflake..."
+poetry run autoflake --in-place --remove-unused-variables --remove-all-unused-imports -r app
+
+echo "🧹 Rodando isort..."
+poetry run isort app
+
+echo "🧹 Rodando black..."
+poetry run black app
+
+echo "🔍 Rodando pylint..."
+poetry run pylint app
+
+
+# chmod +x lint.sh
+# ./lint.sh

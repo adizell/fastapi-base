@@ -3,7 +3,7 @@ User Endpoints Module
 
 This module defines routes for user management.
 """
-from typing import Any, List, Optional
+from typing import Any, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import and_, or_
@@ -32,11 +32,11 @@ router = APIRouter()
 
 @router.get("/", response_model=PaginatedResponse[UserResponse])
 async def get_users(
-        db: AsyncSession = Depends(get_db),
-        pagination: dict = Depends(parse_pagination_params),
-        search: Optional[str] = Query(None, description="Search by email or full name"),
-        is_active: Optional[bool] = Query(None, description="Filter by active status"),
-        _: User = Depends(require_permissions(["user:read"])),
+    db: AsyncSession = Depends(get_db),
+    pagination: dict = Depends(parse_pagination_params),
+    search: Optional[str] = Query(None, description="Search by email or full name"),
+    is_active: Optional[bool] = Query(None, description="Filter by active status"),
+    _: User = Depends(require_permissions(["user:read"])),
 ) -> Any:
     """
     Get all users with pagination.
@@ -91,11 +91,13 @@ async def get_users(
     )
 
 
-@router.post("/", response_model=UserDetailResponse, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/", response_model=UserDetailResponse, status_code=status.HTTP_201_CREATED
+)
 async def create_user(
-        user_in: UserCreate,
-        db: AsyncSession = Depends(get_db),
-        _: User = Depends(require_permissions(["user:create"])),
+    user_in: UserCreate,
+    db: AsyncSession = Depends(get_db),
+    _: User = Depends(require_permissions(["user:create"])),
 ) -> Any:
     """
     Create a new user.
@@ -128,7 +130,7 @@ async def create_user(
 
 @router.get("/me", response_model=UserDetailResponse)
 async def get_current_user_details(
-        current_user: User = Depends(get_current_active_user),
+    current_user: User = Depends(get_current_active_user),
 ) -> Any:
     """
     Get details of the current user.
@@ -144,9 +146,9 @@ async def get_current_user_details(
 
 @router.put("/me", response_model=UserDetailResponse)
 async def update_current_user(
-        user_in: UserUpdate,
-        db: AsyncSession = Depends(get_db),
-        current_user: User = Depends(get_current_active_user),
+    user_in: UserUpdate,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_active_user),
 ) -> Any:
     """
     Update current user details.
@@ -183,9 +185,9 @@ async def update_current_user(
 
 @router.get("/{user_id}", response_model=UserDetailResponse)
 async def get_user(
-        user_id: str,
-        db: AsyncSession = Depends(get_db),
-        _: User = Depends(require_permissions(["user:read"])),
+    user_id: str,
+    db: AsyncSession = Depends(get_db),
+    _: User = Depends(require_permissions(["user:read"])),
 ) -> Any:
     """
     Get a specific user by ID.
@@ -213,10 +215,10 @@ async def get_user(
 
 @router.put("/{user_id}", response_model=UserDetailResponse)
 async def update_user(
-        user_id: str,
-        user_in: UserUpdate,
-        db: AsyncSession = Depends(get_db),
-        _: User = Depends(require_permissions(["user:update"])),
+    user_id: str,
+    user_in: UserUpdate,
+    db: AsyncSession = Depends(get_db),
+    _: User = Depends(require_permissions(["user:update"])),
 ) -> Any:
     """
     Update a user.
@@ -259,9 +261,9 @@ async def update_user(
 
 @router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_user(
-        user_id: str,
-        db: AsyncSession = Depends(get_db),
-        _: User = Depends(require_permissions(["user:delete"])),
+    user_id: str,
+    db: AsyncSession = Depends(get_db),
+    _: User = Depends(require_permissions(["user:delete"])),
 ) -> None:
     """
     Delete a user.
@@ -288,10 +290,10 @@ async def delete_user(
 
 @router.put("/{user_id}/roles", response_model=UserDetailResponse)
 async def update_user_roles(
-        user_id: str,
-        roles_in: UserWithRoles,
-        db: AsyncSession = Depends(get_db),
-        _: User = Depends(get_current_superuser),
+    user_id: str,
+    roles_in: UserWithRoles,
+    db: AsyncSession = Depends(get_db),
+    _: User = Depends(get_current_superuser),
 ) -> Any:
     """
     Update a user's roles.

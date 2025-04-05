@@ -3,14 +3,14 @@ Role Endpoints Module
 
 This module defines routes for role management.
 """
-from typing import Any, List, Optional
+from typing import Any, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import and_, or_
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.deps import parse_pagination_params
-from app.core.dependencies import get_current_superuser, require_permissions
+from app.core.dependencies import require_permissions
 from app.crud.role import role_crud
 from app.db.session import get_db
 from app.models.role import Role
@@ -29,10 +29,10 @@ router = APIRouter()
 
 @router.get("/", response_model=PaginatedResponse[RoleResponse])
 async def get_roles(
-        db: AsyncSession = Depends(get_db),
-        pagination: dict = Depends(parse_pagination_params),
-        search: Optional[str] = Query(None, description="Search by name or code"),
-        _: User = Depends(require_permissions(["role:read"])),
+    db: AsyncSession = Depends(get_db),
+    pagination: dict = Depends(parse_pagination_params),
+    search: Optional[str] = Query(None, description="Search by name or code"),
+    _: User = Depends(require_permissions(["role:read"])),
 ) -> Any:
     """
     Get all roles with pagination.
@@ -83,11 +83,13 @@ async def get_roles(
     )
 
 
-@router.post("/", response_model=RoleDetailResponse, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/", response_model=RoleDetailResponse, status_code=status.HTTP_201_CREATED
+)
 async def create_role(
-        role_in: RoleCreate,
-        db: AsyncSession = Depends(get_db),
-        _: User = Depends(require_permissions(["role:create"])),
+    role_in: RoleCreate,
+    db: AsyncSession = Depends(get_db),
+    _: User = Depends(require_permissions(["role:create"])),
 ) -> Any:
     """
     Create a new role.
@@ -120,9 +122,9 @@ async def create_role(
 
 @router.get("/{role_id}", response_model=RoleDetailResponse)
 async def get_role(
-        role_id: str,
-        db: AsyncSession = Depends(get_db),
-        _: User = Depends(require_permissions(["role:read"])),
+    role_id: str,
+    db: AsyncSession = Depends(get_db),
+    _: User = Depends(require_permissions(["role:read"])),
 ) -> Any:
     """
     Get a specific role by ID.
@@ -150,10 +152,10 @@ async def get_role(
 
 @router.put("/{role_id}", response_model=RoleDetailResponse)
 async def update_role(
-        role_id: str,
-        role_in: RoleUpdate,
-        db: AsyncSession = Depends(get_db),
-        _: User = Depends(require_permissions(["role:update"])),
+    role_id: str,
+    role_in: RoleUpdate,
+    db: AsyncSession = Depends(get_db),
+    _: User = Depends(require_permissions(["role:update"])),
 ) -> Any:
     """
     Update a role.
@@ -187,9 +189,9 @@ async def update_role(
 
 @router.delete("/{role_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_role(
-        role_id: str,
-        db: AsyncSession = Depends(get_db),
-        _: User = Depends(require_permissions(["role:delete"])),
+    role_id: str,
+    db: AsyncSession = Depends(get_db),
+    _: User = Depends(require_permissions(["role:delete"])),
 ) -> None:
     """
     Delete a role.
@@ -216,10 +218,10 @@ async def delete_role(
 
 @router.put("/{role_id}/permissions", response_model=RoleDetailResponse)
 async def update_role_permissions(
-        role_id: str,
-        permissions_in: RoleWithPermissions,
-        db: AsyncSession = Depends(get_db),
-        _: User = Depends(require_permissions(["role:update"])),
+    role_id: str,
+    permissions_in: RoleWithPermissions,
+    db: AsyncSession = Depends(get_db),
+    _: User = Depends(require_permissions(["role:update"])),
 ) -> Any:
     """
     Update a role's permissions.

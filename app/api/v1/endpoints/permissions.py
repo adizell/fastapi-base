@@ -3,7 +3,7 @@ Permission Endpoints Module
 
 This module defines routes for permission management.
 """
-from typing import Any, List, Optional
+from typing import Any, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import and_, or_
@@ -27,10 +27,10 @@ router = APIRouter()
 
 @router.get("/", response_model=PaginatedResponse[PermissionResponse])
 async def get_permissions(
-        db: AsyncSession = Depends(get_db),
-        pagination: dict = Depends(parse_pagination_params),
-        search: Optional[str] = Query(None, description="Search by name or code"),
-        _: User = Depends(require_permissions(["role:read"])),
+    db: AsyncSession = Depends(get_db),
+    pagination: dict = Depends(parse_pagination_params),
+    search: Optional[str] = Query(None, description="Search by name or code"),
+    _: User = Depends(require_permissions(["role:read"])),
 ) -> Any:
     """
     Get all permissions with pagination.
@@ -81,11 +81,13 @@ async def get_permissions(
     )
 
 
-@router.post("/", response_model=PermissionResponse, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/", response_model=PermissionResponse, status_code=status.HTTP_201_CREATED
+)
 async def create_permission(
-        permission_in: PermissionCreate,
-        db: AsyncSession = Depends(get_db),
-        _: User = Depends(get_current_superuser),
+    permission_in: PermissionCreate,
+    db: AsyncSession = Depends(get_db),
+    _: User = Depends(get_current_superuser),
 ) -> Any:
     """
     Create a new permission.
@@ -117,9 +119,9 @@ async def create_permission(
 
 @router.get("/{permission_id}", response_model=PermissionResponse)
 async def get_permission(
-        permission_id: str,
-        db: AsyncSession = Depends(get_db),
-        _: User = Depends(require_permissions(["role:read"])),
+    permission_id: str,
+    db: AsyncSession = Depends(get_db),
+    _: User = Depends(require_permissions(["role:read"])),
 ) -> Any:
     """
     Get a specific permission by ID.
@@ -147,10 +149,10 @@ async def get_permission(
 
 @router.put("/{permission_id}", response_model=PermissionResponse)
 async def update_permission(
-        permission_id: str,
-        permission_in: PermissionUpdate,
-        db: AsyncSession = Depends(get_db),
-        _: User = Depends(get_current_superuser),
+    permission_id: str,
+    permission_in: PermissionUpdate,
+    db: AsyncSession = Depends(get_db),
+    _: User = Depends(get_current_superuser),
 ) -> Any:
     """
     Update a permission.
@@ -187,9 +189,9 @@ async def update_permission(
 
 @router.delete("/{permission_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_permission(
-        permission_id: str,
-        db: AsyncSession = Depends(get_db),
-        _: User = Depends(get_current_superuser),
+    permission_id: str,
+    db: AsyncSession = Depends(get_db),
+    _: User = Depends(get_current_superuser),
 ) -> None:
     """
     Delete a permission.
