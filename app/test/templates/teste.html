@@ -1,0 +1,29 @@
+<!-- http://127.0.0.1:5500/app/test/templates/teste.html-->
+
+<!DOCTYPE html>
+<html>
+
+<body>
+	<h1>Test CORS</h1>
+	<button onclick="login()">Login</button>
+
+	<script>
+		async function login() {
+			const res = await fetch('http://localhost:8000/api/v1/auth/login', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					email: 'mandrik@gmail.com',
+					password: 'GFarms01'
+				})
+			});
+
+			const data = await res.json();
+			console.log(data);
+		}
+	</script>
+</body>
+
+</html>

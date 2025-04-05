@@ -66,8 +66,8 @@ def create_application() -> FastAPI:
         CORSMiddleware,
         allow_origins=settings.CORS_ORIGINS,
         allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
+        allow_methods=["*"],  # garante que OPTIONS, POST, GET, etc. sejam aceitos
+        allow_headers=["*"],  # permite headers como Authorization, Content-Type, etc.
     )
 
     # Add API request performance monitoring middleware
@@ -123,7 +123,7 @@ def create_application() -> FastAPI:
 
     @app.exception_handler(RequestValidationError)
     async def validation_exception_handler(
-        request: Request, exc: RequestValidationError
+            request: Request, exc: RequestValidationError
     ):
         """
         Exception handler for request validation errors.

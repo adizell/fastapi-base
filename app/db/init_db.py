@@ -1,3 +1,8 @@
+# app/db/init_db.py
+
+# Caso necessário executar o escript, mas lembre-se de conferir em .env -> INITIALIZE_DB=True
+# poetry run alembic upgrade head
+
 """
 Database Initialization Module
 
@@ -74,6 +79,10 @@ async def init_permissions(db: AsyncSession) -> List[Permission]:
     for perm_data in default_permissions:
         # Check if permission already exists
         permission = await permission_crud.get_by_code(db, code=perm_data["code"])
+        if permission:
+            logger.info(f"Permissão já existe: {permission.code}")
+            permissions.append(permission)
+            continue
         if not permission:
             # Create permission if it doesn't exist
             perm_in = PermissionCreate(**perm_data)
@@ -81,6 +90,7 @@ async def init_permissions(db: AsyncSession) -> List[Permission]:
             logger.info(f"Created permission: {permission.code}")
         permissions.append(permission)
 
+    await db.commit()
     return permissions
 
 
@@ -133,6 +143,7 @@ async def init_roles(db: AsyncSession, permissions: List[Permission]) -> List[Ro
             logger.info(f"Created role: {role.code}")
         roles.append(role)
 
+    await db.commit()
     return roles
 
 
@@ -152,6 +163,7 @@ async def init_superuser(db: AsyncSession, roles: List[Role]) -> None:
         # Check if superuser already exists
         user = await user_crud.get_by_email(db, email=settings.FIRST_SUPERUSER_EMAIL)
         if not user:
+            await db.commit()
             # Get admin role ID
             admin_role_id = next((str(r.id) for r in roles if r.code == "admin"), None)
             role_ids = [admin_role_id] if admin_role_id else []
@@ -192,3 +204,9 @@ async def init_db() -> None:
         await init_superuser(db, roles)
 
     logger.info("Database initialization completed")
+
+
+if __name__ == "__main__":
+    import asyncio
+
+    asyncio.run(init_db())
