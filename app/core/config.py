@@ -48,12 +48,22 @@ class Settings(BaseSettings):
     )
 
     @field_validator("SQLALCHEMY_DATABASE_URI", mode="before")
-    def assemble_db_connection(cls, v: Optional[str], info: Dict[str, Any]) -> Any:
+    def assemble_db_connection(cls, v: Optional[str], info: Dict[str, Any]) -> str:
         if isinstance(v, str):
             return v
+
         values = info.data
-        # return f"postgresql+asyncpg://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
-        return f"postgresql+asyncpg://{values.get('POSTGRES_USER')}:{values.get('POSTGRES_PASSWORD')}@{values.get('POSTGRES_SERVER')}:{values.get('POSTGRES_PORT')}/{values.get('POSTGRES_DB')}"
+
+        db_user = values.get("POSTGRES_USER")
+        db_password = values.get("POSTGRES_PASSWORD")
+        db_host = values.get("POSTGRES_SERVER")
+        db_port = values.get("POSTGRES_PORT")
+        db_name = values.get("POSTGRES_DB")
+
+        if not all([db_user, db_password, db_host, db_port, db_name]):
+            raise ValueError("Faltam variáveis para montar a conexão com o banco de dados")
+
+        return f"postgresql+asyncpg://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
 
     @field_validator("CORS_ORIGINS", mode="before")
     def assemble_cors_origins(cls, v: Union[str, List[str]]) -> Union[List[str], str]:
