@@ -17,6 +17,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
+# from app.core.middleware.security_headers_middleware import SecurityHeadersMiddleware
+
 from app.api.v1.router import api_router as api_router_v1
 from app.core.config import settings
 from app.core.exceptions import AppException, handle_app_exception
@@ -69,6 +71,9 @@ def create_application() -> FastAPI:
         allow_methods=["*"],  # garante que OPTIONS, POST, GET, etc. sejam aceitos
         allow_headers=["*"],  # permite headers como Authorization, Content-Type, etc.
     )
+
+    # Adicionar middlewares
+#   app.add_middleware(SecurityHeadersMiddleware)  # Deve ser o primeiro para garantir que os cabeçalhos sejam aplicados
 
     # Add API request performance monitoring middleware
     @app.middleware("http")

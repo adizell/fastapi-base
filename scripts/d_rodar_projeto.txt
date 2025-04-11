@@ -1,5 +1,6 @@
 # Inicia o servidor FastAPI em modo normal (produção)
 poetry run uvicorn app.main:app
+uvicorn app.main:app --port 9000
 
 # Inicia o servidor FastAPI em modo de desenvolvimento com recarregamento automático (hot-reload)
 poetry run uvicorn app.main:app --reload
