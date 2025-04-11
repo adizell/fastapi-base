@@ -66,13 +66,13 @@ async def get_roles(
         db,
         skip=pagination["skip"],
         limit=pagination["limit"],
-        filters=[filter_condition] if filter_condition else None,
+        filters=[filter_condition] if filter_condition is not None else None,
     )
 
     # Get total count
     total = await role_crud.get_count(
         db,
-        filters=[filter_condition] if filter_condition else None,
+        filters=[filter_condition] if filter_condition is not None else None,
     )
 
     return PaginatedResponse.create(
